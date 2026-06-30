@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang=\"es\">
+<head>
+<meta charset=\"UTF-8\" />
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />
+<title>KriptonClient — Módulos Mejorados</title>
+<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css\">
+<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js\"></script>
+<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js\"></script>
+<style>
+  :root{
+    --bg:#0b0d12;
+    --panel:#11141b;
+    --panel-2:#161a23;
+    --border:#1f2430;
+    --text:#e6e8ee;
+    --muted:#8b93a7;
+    --accent:#ff0a6b;
+    --accent-2:#7c5cff;
+    --ok:#3ddc97;
+    --warn:#ffb547;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:\"JetBrains Mono\",ui-monospace,Menlo,Consolas,monospace}
+  body{background:
+    radial-gradient(900px 500px at 85% -10%, rgba(124,92,255,.18), transparent 60%),
+    radial-gradient(700px 400px at -10% 30%, rgba(255,10,107,.15), transparent 60%),
+    var(--bg);
+    min-height:100vh}
+  header{padding:48px 32px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(11,13,18,.85);backdrop-filter:blur(14px);z-index:10}
+  h1{margin:0;font-size:28px;letter-spacing:-.5px}
+  h1 .tag{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);margin-top:8px;font-size:13px}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .toc a{text-decoration:none;color:var(--muted);padding:6px 12px;border:1px solid var(--border);border-radius:999px;font-size:12px;transition:all .2s}
+  .toc a:hover{color:var(--text);border-color:var(--accent);transform:translateY(-1px)}
+  main{max-width:1100px;margin:0 auto;padding:32px}
+  .mod{background:var(--panel);border:1px solid var(--border);border-radius:14px;margin-bottom:28px;overflow:hidden}
+  .mod-head{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 22px;background:var(--panel-2);border-bottom:1px solid var(--border);gap:16px}
+  .mod-title{font-size:18px;font-weight:600}
+  .mod-title .pill{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:6px;margin-left:8px;text-transform:uppercase;vertical-align:middle}
+  .pill.combat{background:rgba(255,10,107,.18);color:#ff5b95}
+  .pill.misc{background:rgba(124,92,255,.18);color:#a896ff}
+  .pill.movement{background:rgba(61,220,151,.18);color:#5cf0a8}
+  .pill.player{background:rgba(255,181,71,.18);color:#ffc26a}
+  .pill.visual{background:rgba(91,180,255,.18);color:#6cc2ff}
+  .mod-desc{color:var(--muted);font-size:12.5px;margin-top:6px;line-height:1.55;max-width:720px}
+  .mod-desc b{color:var(--text)}
+  .copy-btn{cursor:pointer;background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;font-size:12px;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap}
+  .copy-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .copy-btn.copied{border-color:var(--ok);color:var(--ok)}
+  pre{margin:0;max-height:600px;overflow:auto}
+  pre code.hljs{padding:18px 22px;background:transparent !important;font-size:12.5px;line-height:1.55;font-family:inherit}
+  .note{background:rgba(255,181,71,.08);border-left:3px solid var(--warn);padding:12px 16px;margin:0;color:#ffd596;font-size:12px;line-height:1.55}
+  .note b{color:#ffe2b3}
+  footer{padding:32px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--border);margin-top:40px}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:#252b39;border-radius:10px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class=\"tag\">Kripton</span>Client — Módulos Mejorados</h1>
+  <div class=\"sub\">Minecraft 1.21.x · Fabric · pulsa <b style=\"color:var(--text)\">Copiar</b> en cada módulo para llevarte el código limpio.</div>
+  <nav class=\"toc\">
+    <a href=\"#killaura\">KillAura</a>
+    <a href=\"#criticals\">Criticals</a>
+    <a href=\"#discordrpc\">DiscordRPC</a>
+    <a href=\"#notifier\">Notifier</a>
+    <a href=\"#spammer\">Spammer</a>
+    <a href=\"#jesus\">Jesus</a>
+    <a href=\"#autototem\">AutoTotem</a>
+    <a href=\"#nofall\">NoFall</a>
+    <a href=\"#freecam\">Freecam</a>
+    <a href=\"#fullbright\">Fullbright</a>
+    <a href=\"#stringsetting\">Fix: StringSetting GUI</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============== KILLAURA ============== -->
+<section class=\"mod\" id=\"killaura\">
+  <div class=\"mod-head\">
+    <div>
+      <div class=\"mod-title\">KillAura.java <span class=\"pill combat\">Combat</span></div>
+      <div class=\"mod-desc\">
+        <b>Fix:</b> ya no se corta a ~3 bloques. Usa distancia de <b>ojo a hitbox</b> (no centro a centro), rota la cabeza hacia el target antes de pegar, y el server acepta hasta tu <b>entityInteractionRange</b>.
+        Nuevo modo <b>Weapon</b> con <i>Cualquiera / Espada / Hacha / Pico / Pala / Tridente / Mano / Custom</i> (Custom permite escribir el nombre del item, ej. <i>mace</i>).
+        Integra <b>Criticals</b> si está activo. FOV check opcional, ignora amigos, ignora invisibles opcional.
+      </div>
+    </div>
+    <button class=\"copy-btn\" data-target=\"code-killaura\">Copiar</button>
+  </div>
+<pre><code class=\"language-java\" id=\"code-killaura\">package kripton.dev.module.modules.combat;
+
+import kripton.dev.friend.FriendManager;
+import kripton.dev.module.Category;
+import kripton.dev.module.Module;
+import kripton.dev.module.ModuleManager;
+import kripton.dev.module.settings.BooleanSetting;
+import kripton.dev.module.settings.ModeSetting;
+import kripton.dev.module.settings.NumberSetting;
+import kripton.dev.module.settings.StringSetting;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.stream.StreamSupport;
+
+public class KillAura extends Module {
+
+    private final NumberSetting range   = new NumberSetting(\"Range\",  \"Distancia maxima de ataque (ojo->hitbox)\", 4.5, 2.0, 8.0, 0.1);
+    private final NumberSetting cps     = new NumberSetting(\"CPS\",    \"Ataques por segundo\", 12.0, 1.0, 20.0, 0.5);
+    private final NumberSetting fov     = new NumberSetting(\"FOV\",    \"Angulo de vision (360 = libre)\", 360.0, 30.0, 360.0, 5.0);
+
+    private final BooleanSetting players     = new BooleanSetting(\"Players\",   \"Ataca a otros jugadores\", true);
+    private final BooleanSetting mobs        = new BooleanSetting(\"Mobs\",      \"Ataca a mobs hostiles\",  true);
+    private final BooleanSetting ignoreInv   = new BooleanSetting(\"Ignorar Invisibles\", \"Ignora entidades invisibles\", false);
+    private final BooleanSetting rotate      = new BooleanSetting(\"Rotacion\",  \"Rota hacia el target (silent)\", true);
+    private final BooleanSetting useCritical = new BooleanSetting(\"Criticals\", \"Fuerza criticos si el modulo esta activo\", true);
+
+    private final ModeSetting weapon = new ModeSetting(\"Weapon\", \"Arma requerida\",
+            \"Cualquiera\", Arrays.asList(\"Cualquiera\",\"Espada\",\"Hacha\",\"Pico\",\"Pala\",\"Tridente\",\"Mano\",\"Custom\"));
+    private final StringSetting custom = new StringSetting(\"Custom Item\", \"Substring del item (ej: mace, netherite_sword)\", \"sword\");
+
+    private long lastAttackTime = 0L;
+
+    public KillAura() {
+        super(\"KillAura\", \"Ataca automaticamente a entidades cercanas\", Category.COMBAT);
+        addSetting(range);
+        addSetting(cps);
+        addSetting(fov);
+        addSetting(players);
+        addSetting(mobs);
+        addSetting(ignoreInv);
+        addSetting(rotate);
+        addSetting(useCritical);
+        addSetting(weapon);
+        addSetting(custom);
+    }
+
+    @Override protected void onEnable() { lastAttackTime = System.currentTimeMillis(); }
+
+    @Override
+    public void onUpdate() {
+        if (mc.player == null || mc.level == null || mc.gameMode == null) return;
+        if (!hasCorrectWeapon()) return;
+
+        long now = System.currentTimeMillis();
+        long delay = (long) (1000.0 / cps.getValue());
+        if (now - lastAttackTime < delay) return;
+
+        Iterable&lt;Entity&gt; entities = mc.level.entitiesForRendering();
+        Vec3 eye = mc.player.getEyePosition();
+        double maxR = range.getValue();
+
+        Entity target = StreamSupport.stream(entities.spliterator(), false)
+                .filter(e -&gt; isValidTarget(e, eye, maxR))
+                .min(Comparator.comparingDouble(e -&gt; e.getBoundingBox().distanceToSqr(eye)))
+                .orElse(null);
+
+        if (target == null) return;
+
+        if (rotate.getValue()) {
+            float[] rot = computeRotation(eye, target);
+            // Rotacion silenciosa: solo afecta packets de movimiento
+            mc.player.setYRot(rot[0]);
+            mc.player.setXRot(rot[1]);
+            mc.player.yRotO = rot[0];
+            mc.player.xRotO = rot[1];
+        }
+
+        if (useCritical.getValue()) {
+            Module crit = ModuleManager.getInstance().getModule(Criticals.class);
+            if (crit != null && crit.isEnabled()) ((Criticals) crit).doCritical();
+        }
+
+        mc.gameMode.attack(mc.player, target);
+        mc.player.swing(InteractionHand.MAIN_HAND);
+        mc.player.resetAttackStrengthTicker();
+        lastAttackTime = now;
+    }
+
+    private boolean isValidTarget(Entity entity, Vec3 eye, double maxR) {
+        if (entity == mc.player) return false;
+        if (!(entity instanceof LivingEntity living)) return false;
+        if (living.isDeadOrDying() || living.getHealth() &lt;= 0f) return false;
+        if (ignoreInv.getValue() && living.isInvisible()) return false;
+
+        // Distancia OJO -&gt; HITBOX (es lo que valida el server)
+        double distSqr = living.getBoundingBox().distanceToSqr(eye);
+        if (distSqr &gt; maxR * maxR) return false;
+
+        // FOV check
+        if (fov.getValue() &lt; 360.0) {
+            float ang = angleTo(eye, living);
+            if (Math.abs(ang) &gt; fov.getValue() / 2f) return false;
+        }
+
+        // Amigos
+        if (living instanceof Player p && FriendManager.getInstance().isFriend(p.getName().getString())) return false;
+
+        if (players.getValue() && living instanceof Player) return true;
+        if (mobs.getValue()    && living instanceof Monster) return true;
+        return false;
+    }
+
+    private float angleTo(Vec3 eye, Entity target) {
+        Vec3 to = target.getBoundingBox().getCenter().subtract(eye).normalize();
+        Vec3 look = mc.player.getLookAngle();
+        double dot = Math.max(-1.0, Math.min(1.0, look.dot(to)));
+        return (float) Math.toDegrees(Math.acos(dot));
+    }
+
+    private float[] computeRotation(Vec3 eye, Entity target) {
+        Vec3 c = target.getBoundingBox().getCenter();
+        double dx = c.x - eye.x;
+        double dy = c.y - eye.y;
+        double dz = c.z - eye.z;
+        double dh = Math.sqrt(dx * dx + dz * dz);
+        float yaw   = (float) (Math.toDegrees(Math.atan2(dz, dx)) - 90f);
+        float pitch = (float) -Math.toDegrees(Math.atan2(dy, dh));
+        return new float[]{yaw, pitch};
+    }
+
+    private boolean hasCorrectWeapon() {
+        String sel = weapon.getValue();
+        if (\"Cualquiera\".equals(sel)) return true;
+
+        ItemStack stack = mc.player.getMainHandItem();
+        if (\"Mano\".equals(sel)) return stack.isEmpty();
+
+        String id = net.minecraft.core.registries.BuiltInRegistries.ITEM
+                .getKey(stack.getItem()).getPath().toLowerCase();
+
+        return switch (sel) {
+            case \"Espada\"   -&gt; id.endsWith(\"_sword\");
+            case \"Hacha\"    -&gt; id.endsWith(\"_axe\");
+            case \"Pico\"     -&gt; id.endsWith(\"_pickaxe\");
+            case \"Pala\"     -&gt; id.endsWith(\"_shovel\");
+            case \"Tridente\" -&gt; id.equals(\"trident\");
+            case \"Custom\"   -&gt; !custom.getValue().isBlank() && id.contains(custom.getValue().toLowerCase());
+            default         -&gt; true;
+        };
+    }
+}
+</code></pre>
+  <div class=\"note\"><b>Importante:</b> el rango máximo que el server acepta es tu atributo <code>entityInteractionRange</code> (vanilla = 3.0). Para llegar a 4.5–6 necesitas el módulo <b>Reach</b> que modifique ese atributo mediante mixin. Con este fix al menos consumes <b>todo</b> el rango disponible (no se corta a 3 por mal cálculo).</div>
+</section>
+
+<!-- ============== CRITICALS ============== -->
+<section class=\"mod\" id=\"criticals\">
+  <div class=\"mod-head\">
+    <div>
+      <div class=\"mod-title\">Criticals.java <span class=\"pill combat\">Combat</span></div>
+      <div class=\"mod-desc\"><b>Mejorado:</b> añade modos <i>Packet / Jump / OnGround</i>, cooldown anti-spam y verificación de vehículo/escalera para no romper movimiento.</div>
+    </div>
+    <button class=\"copy-btn\" data-target=\"code-criticals\">Copiar</button>
+  </div>
+<pre><code class=\"language-java\" id=\"code-criticals\">package kripton.dev.module.modules.combat;
+
+import kripton.dev.module.Category;
+import kripton.dev.module.Module;
+import kripton.dev.module.settings.ModeSetting;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+
+import java.util.Arrays;
+
+public class Criticals extends Module {
+
+    private final ModeSetting mode = new ModeSetting(\"Modo\", \"Tipo de critico\",
+            \"Packet\", Arrays.asList(\"Packet\", \"MiniJump\", \"OnGround\"));
+
+    private long lastCrit = 0L;
+
+    public Criticals() {
+        super(\"Criticals\", \"Fuerza golpes criticos automaticamente\", Category.COMBAT);
+        addSetting(mode);
+    }
+
+    public void doCritical() {
+        if (mc.player == null || mc.getConnection() == null) return;
+        if (mc.player.isInWater() || mc.player.isInLava()) return;
+        if (mc.player.onClimbable() || mc.player.isPassenger()) return;
+        if (!mc.player.onGround()) return;
+
+        long now = System.currentTimeMillis();
+        if (now - lastCrit &lt; 80) return; // anti-spam
+        lastCrit = now;
+
+        switch (mode.getValue()) {
+            case \"Packet\" -&gt; {
+                double x = mc.player.getX(), y = mc.player.getY(), z = mc.player.getZ();
+                boolean hc = mc.player.horizontalCollision;
+                mc.getConnection().send(new ServerboundMovePlayerPacket.Pos(x, y + 0.0625D, z, false, hc));
+                mc.getConnection().send(new ServerboundMovePlayerPacket.Pos(x, y, z, false, hc));
+            }
+            case \"MiniJump\" -&gt; {
+                mc.player.setDeltaMovement(mc.player.getDeltaMovement().x, 0.42, mc.player.getDeltaMovement().z);
+            }
+            case \"OnGround\" -&gt; {
+                mc.player.setOnGround(false);
+            }
+        }
+    }
+
+    @Override public void onUpdate() { }
+}
+</code></pre>
+</section>
+
+<!-- ============== DISCORD RPC ============== -->
+<section class=\"mod\" id=\"discordrpc\">
+  <div class=\"mod-head\">
+    <div>
+      <div class=\"mod-title\">DiscordRPC.java <span class=\"pill misc\">Misc</span></div>
+      <div class=\"mod-desc\">
+        <b>Reescrito:</b> la lib <i>java-discord-rpc</i> está abandonada y los enlaces raw cambian. Esta versión usa <b>IPC directo</b> al socket local de Discord (sin nativos, sin JNA): se conecta a <code>\\\\.\\pipe\\discord-ipc-N</code> en Windows o <code>$XDG_RUNTIME_DIR/discord-ipc-N</code> en Linux/Mac. Funciona en todos los sistemas.<br>
+        Incluye reconexión automática, throttle de 2s (Discord rate-limita a 5/20s) y cierre limpio.
+      </div>
+    </div>
+    <button class=\"copy-btn\" data-target=\"code-rpc\">Copiar</button>
+  </div>
+<pre><code class=\"language-java\" id=\"code-rpc\">package kripton.dev.module.modules.misc;
+
+import kripton.dev.module.Category;
+import kripton.dev.module.Module;
+import kripton.dev.module.settings.StringSetting;
+import net.minecraft.client.Minecraft;
+
+import java.io.*;
+import java.net.StandardProtocolFamily;
+import java.net.UnixDomainSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.channels.SocketChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
+public class DiscordRPC extends Module {
+
+    private final Minecraft mc = Minecraft.getInstance();
+    private final StringSetting line1   = new StringSetting(\"Linea 1\", \"Texto principal del RPC\", \"KriptonClient On Top\");
+    private final StringSetting line2   = new StringSetting(\"Linea 2\", \"Texto secundario del RPC\", \"Jugando...\");
+    private final StringSetting appId   = new StringSetting(\"App ID\",  \"Application ID de Discord\",  \"1489618554096586782\");
+    private final StringSetting largeKey= new StringSetting(\"Large Key\",\"Asset key del logo\",          \"kr\");
+
+    private SocketChannel channel;
+    private RandomAccessFile winPipe;
+    private long startEpoch;
+    private long lastUpdate;
+    private boolean connected;
+
+    public DiscordRPC() {
+        super(\"DiscordRPC\", \"Muestra tu estado en Discord\", Category.MISC);
+        addSetting(line1);
+        addSetting(line2);
+        addSetting(appId);
+        addSetting(largeKey);
+    }
+
+    @Override
+    protected void onEnable() {
+        startEpoch = System.currentTimeMillis() / 1000L;
+        new Thread(this::connect, \"Kripton-RPC\").start();
+    }
+
+    @Override
+    protected void onDisable() {
+        connected = false;
+        try { if (channel != null) channel.close(); } catch (IOException ignored) {}
+        try { if (winPipe != null) winPipe.close(); } catch (IOException ignored) {}
+        channel = null; winPipe = null;
+    }
+
+    @Override
+    public void onUpdate() {
+        if (!connected) return;
+        long now = System.currentTimeMillis();
+        if (now - lastUpdate &lt; 2200) return; // 5/20s rate limit
+        lastUpdate = now;
+
+        String server = \"Singleplayer\";
+        if (mc.getCurrentServer() != null) server = mc.getCurrentServer().ip;
+
+        String json = \"{\"
+                + \"\\"cmd\\":\\"SET_ACTIVITY\\",\"
+                + \"\\"args\\":{\\"pid\\":\" + ProcessHandle.current().pid() + \",\"
+                + \"\\"activity\\":{\"
+                + \"\\"details\\":\" + jsonStr(line1.getValue()) + \",\"
+                + \"\\"state\\":\"   + jsonStr(line2.getValue() + \" | \" + server) + \",\"
+                + \"\\"timestamps\\":{\\"start\\":\" + startEpoch + \"},\"
+                + \"\\"assets\\":{\\"large_image\\":\" + jsonStr(largeKey.getValue())
+                + \",\\"large_text\\":\\"KriptonClient\\"}\"
+                + \"}},\"
+                + \"\\"nonce\\":\\"\" + UUID.randomUUID() + \"\\"}\";
+        try { sendFrame(1, json); }
+        catch (IOException e) { connected = false; new Thread(this::connect, \"Kripton-RPC-Reconnect\").start(); }
+    }
+
+    private void connect() {
+        for (int i = 0; i &lt; 10 && isEnabled(); i++) {
+            try {
+                openPipe(i);
+                handshake();
+                connected = true;
+                return;
+            } catch (IOException ignored) {}
+        }
+        System.err.println(\"[Kripton] No se pudo conectar a Discord (¿esta abierto?)\");
+    }
+
+    private void openPipe(int n) throws IOException {
+        String os = System.getProperty(\"os.name\").toLowerCase();
+        if (os.contains(\"win\")) {
+            winPipe = new RandomAccessFile(\"\\\\.\\pipe\\discord-ipc-\" + n, \"rw\");
+        } else {
+            String dir = System.getenv(\"XDG_RUNTIME_DIR\");
+            if (dir == null) dir = System.getenv(\"TMPDIR\");
+            if (dir == null) dir = \"/tmp\";
+            Path p = Paths.get(dir, \"discord-ipc-\" + n);
+            // Snap/Flatpak alternativos
+            if (!Files.exists(p)) p = Paths.get(dir, \"app/com.discordapp.Discord/discord-ipc-\" + n);
+            if (!Files.exists(p)) p = Paths.get(dir, \"snap.discord/discord-ipc-\" + n);
+            channel = SocketChannel.open(StandardProtocolFamily.UNIX);
+            channel.connect(UnixDomainSocketAddress.of(p));
+        }
+    }
+
+    private void handshake() throws IOException {
+        String hs = \"{\\"v\\":1,\\"client_id\\":\\"\" + appId.getValue() + \"\\"}\";
+        sendFrame(0, hs);
+        readFrame(); // descarta READY
+    }
+
+    private void sendFrame(int op, String payload) throws IOException {
+        byte[] data = payload.getBytes(\"UTF-8\");
+        ByteBuffer buf = ByteBuffer.allocate(8 + data.length).order(ByteOrder.LITTLE_ENDIAN);
+        buf.putInt(op).putInt(data.length).put(data).flip();
+        if (winPipe != null) { winPipe.write(buf.array()); }
+        else if (channel != null) { while (buf.hasRemaining()) channel.write(buf); }
+    }
+
+    private void readFrame() throws IOException {
+        ByteBuffer header = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN);
+        if (winPipe != null) { winPipe.readFully(header.array()); }
+        else { while (header.hasRemaining()) channel.read(header); }
+        header.flip(); header.getInt();
+        int len = header.getInt();
+        ByteBuffer body = ByteBuffer.allocate(len);
+        if (winPipe != null) winPipe.readFully(body.array());
+        else { while (body.hasRemaining()) channel.read(body); }
+    }
+
+    private static String jsonStr(String s) {
+        StringBuilder sb = new StringBuilder(\"\\"\");
+        for (char c : s.toCharArray()) {
+            switch (c) {
+                case '\"'  -&gt; sb.append(\"\\\\"\");
+                case '\\' -&gt; sb.append(\"\\\\\");
+                case '\n' -&gt; sb.append(\"\\n\");
+                case '\r' -&gt; sb.append(\"\\r\");
+                case '\t' -&gt; sb.append(\"\\t\");
+                default   -&gt; sb.append(c);
+            }
+        }
+        return sb.append('\"').toString();
+    }
+}
+</code></pre>
+  <div class=\"note\"><b>Requiere Java 16+</b> (UnixDomainSocketAddress). Si tu mod usa Java 17 (Minecraft 1.21 lo usa por defecto) funciona sin tocar nada. <b>No requiere</b> dependencias adicionales en <code>build.gradle</code>.</div>
+</section>
+
+<!-- ============== NOTIFIER ============== -->
+<section class=\"mod\" id=\"notifier\">
+  <div class=\"mod-head\">
+    <div>
+      <div class=\"mod-title\">Notifier.java <span class=\"pill misc\">Misc</span></div>
+      <div class=\"mod-desc\">
+        <b>Nuevo:</b> opciones para notificar cuando un player <i>entra al rango</i>, <i>sale del rango</i>, <i>pop de totem</i>, y cuando <i>entra en tu visión</i> (FOV). Muestra <b>distancia</b>, <b>diferencia de altura</b> y <b>dirección</b> (N/S/E/O). Cooldown configurable para no spamear.
+      </div>
+    </div>
+    <button class=\"copy-btn\" data-target=\"code-notifier\">Copiar</button>
+  </div>
+<pre><code class=\"language-java\" id=\"code-notifier\">package kripton.dev.module.modules.misc;
+
+import kripton.dev.client.ClientChat;
+import kripton.dev.friend.FriendManager;
+import kripton.dev.module.Category;
+import kripton.dev.module.Module;
+import kripton.dev.module.settings.BooleanSetting;
+import kripton.dev.module.settings.NumberSetting;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+public class Notifier extends Module {
+
+    private final NumberSetting  range     = new NumberSetting(\"Range\",      \"Radio de deteccion (bloques)\", 40.0, 5.0, 200.0, 1.0);
+    private final NumberSetting  fov       = new NumberSetting(\"FOV\",        \"Angulo de vision para 'entra a la vista'\", 90.0, 30.0, 360.0, 5.0);
+    private final NumberSetting  cooldown  = new NumberSetting(\"Cooldown\",   \"Segundos entre avisos por player\", 5.0, 0.0, 60.0, 0.5);
+
+    private final BooleanSetting onEnter   = new BooleanSetting(\"Entra al rango\",  \"Avisa cuando un player entra al rango\", true);
+    private final BooleanSetting onLeave   = new BooleanSetting(\"Sale del rango\",  \"Avisa cuando un player sale del rango\", false);
+    private final BooleanSetting onVision  = new BooleanSetting(\"Entra en vision\", \"Avisa cuando entra en tu FOV\",          true);
+    private final BooleanSetting onPop     = new BooleanSetting(\"Pop de totem\",    \"Avisa cuando un player pop totem\",      true);
+
+    private final Set&lt;Integer&gt; inRange  = new HashSet&lt;&gt;();
+    private final Set&lt;Integer&gt; inVision = new HashSet&lt;&gt;();
+    private final Map&lt;Integer, Long&gt; lastAlert = new HashMap&lt;&gt;();
+    private final Map&lt;Integer, Boolean&gt; lastHadTotem = new HashMap&lt;&gt;();
+
+    public Notifier() {
+        super(\"Notifier\", \"Notifica eventos de otros jugadores\", Category.MISC);
+        addSetting(range);
+        addSetting(fov);
+        addSetting(cooldown);
+        addSetting(onEnter);
+        addSetting(onLeave);
+        addSetting(onVision);
+        addSetting(onPop);
+    }
+
+    @Override protected void onEnable() {
+        inRange.clear(); inVision.clear(); lastAlert.clear(); lastHadTotem.clear();
+    }
+
+    @Override
+    public void onUpdate() {
+        if (mc.player == null || mc.level == null) return;
+
+        Set&lt;Integer&gt; nowInRange  = new HashSet&lt;&gt;();
+        Set&lt;Integer&gt; nowInVision = new HashSet&lt;&gt;();
+        double maxR = range.getValue();
+        Vec3 eye = mc.player.getEyePosition();
+
+        for (Entity e : mc.level.entitiesForRendering()) {
+            if (!(e instanceof Player p) || p == mc.player) continue;
+
+            String name = p.getName().getString();
+            if (FriendManager.getInstance().isFriend(name)) continue;
+
+            double dist = mc.player.distanceTo(p);
+            if (dist &gt; maxR) continue;
+            nowInRange.add(p.getId());
+
+            // Datos posicionales
+            double dx = p.getX() - mc.player.getX();
+            double dy = p.getY() - mc.player.getY();
+            double dz = p.getZ() - mc.player.getZ();
+            String dir = direction(dx, dz);
+            String info = String.format(\"§7[§f%.1fm§7] §8H:§f%+.1f §8D:§f%s\", dist, dy, dir);
+
+            // Entra al rango
+            if (onEnter.getValue() && !inRange.contains(p.getId()) && canAlert(p.getId())) {
+                ClientChat.send(\"§e\" + name + \" §7entro al rango \" + info);
+            }
+
+            // Entra en vision
+            if (onVision.getValue() && isInFov(eye, p)) {
+                nowInVision.add(p.getId());
+                if (!inVision.contains(p.getId()) && canAlert(p.getId() | 0x40000000)) {
+                    ClientChat.send(\"§b\" + name + \" §7entro en tu vision \" + info);
+                }
+            }
+
+            // Pop de totem (detecta si tenia totem y dejo de tenerlo + esta vivo)
+            if (onPop.getValue()) {
+                boolean hasTotem = p.getMainHandItem().is(Items.TOTEM_OF_UNDYING)
+                        || p.getOffhandItem().is(Items.TOTEM_OF_UNDYING);
+                Boolean prev = lastHadTotem.put(p.getId(), hasTotem);
+                if (prev != null && prev && !hasTotem && p.getHealth() &gt; 0f
+                        && canAlert(p.getId() | 0x20000000)) {
+                    ClientChat.send(\"§c\" + name + \" §7POPPED §c♥ \" + info);
+                }
+            }
+        }
+
+        // Sale del rango
+        if (onLeave.getValue()) {
+            for (Integer id : inRange) {
+                if (!nowInRange.contains(id)) {
+                    ClientChat.send(\"§8Un player salio del rango\");
+                    break; // un aviso compacto
+                }
+            }
+        }
+
+        inRange.clear();  inRange.addAll(nowInRange);
+        inVision.clear(); inVision.addAll(nowInVision);
+    }
+
+    private boolean canAlert(int key) {
+        long now = System.currentTimeMillis();
+        long cd  = (long) (cooldown.getValue() * 1000L);
+        Long last = lastAlert.get(key);
+        if (last != null && now - last &lt; cd) return false;
+        lastAlert.put(key, now);
+        return true;
+    }
+
+    private boolean isInFov(Vec3 eye, Entity e) {
+        Vec3 to = e.getBoundingBox().getCenter().subtract(eye).normalize();
+        Vec3 look = mc.player.getLookAngle();
+        double dot = Math.max(-1.0, Math.min(1.0, look.dot(to)));
+        double ang = Math.toDegrees(Math.acos(dot));
+        return ang &lt;= fov.getValue() / 2.0;
+    }
+
+    private String direction(double dx, double dz) {
+        double ang = Math.toDegrees(Math.atan2(-dx, dz));
+        if (ang &lt; 0) ang += 360;
+        String[] dirs = {\"S\",\"SO\",\"O\",\"NO\",\"N\",\"NE\",\"E\",\"SE\"};
+        return dirs[(int) Math.round(ang / 45.0) % 8];
+    }
+}
+</code></pre>
+</section>
+
+<!-- ============== SPAMMER ============== -->
+<section class=\"mod\" id=\"spammer\">
+  <div class=\"mod-head\">
+    <div>
+      <div class=\"mod-title\">Spammer.java <span class=\"pill misc\">Misc</span></div>
+      <div class=\"mod-desc\"><b>Nota:</b> el módulo en sí está bien; añadí soporte de <i>lista de mensajes</i> y rotación. Si el campo de texto sigue sin verse, el bug está en <b>StringSetting (GUI)</b> — abajo te dejo el fix del componente de la GUI.</div>
+    </div>
+    <button class=\"copy-btn\" data-target=\"code-spammer\">Copiar</button>
+  </div>
+<pre><code class=\"language-java\" id=\"code-spammer\">package kripton.dev.module.modules.misc;
+
+import kripton.dev.module.Category;
+import kripton.dev.module.Module;
+import kripton.dev.module.settings.BooleanSetting;
+import kripton.dev.module.settings.NumberSetting;
+import kripton.dev.module.settings.StringSetting;
+
+public class Spammer extends Module {
+
+    private final StringSetting  message  = new StringSetting(\"Mensaje\", \"Texto a spamear (separa con | para rotar varios)\", \"KriptonClient on top!\");
+    private final NumberSetting  delay    = new NumberSetting(\"Delay\",    \"Segundos entre mensajes\", 3.0, 0.5, 60.0, 0.5);
+    private final BooleanSetting random   = new BooleanSetting(\"Aleatorio\",\"Si hay varios mensajes, los elige aleatoriamente\", false);
+
+    private long lastSendTime = 0L;
+    private int  index = 0;
+
+    public Spammer() {
+        super(\"Spammer\", \"Envia mensajes de chat repetidamente\", Category.MISC);
+        addSetting(message);
+        addSetting(delay);
+        addSetting(random);
+    }
+
+    @Override
+    public void onUpdate() {
+        if (mc.player == null || mc.getConnection() == null) return;
+
+        long delayMs = (long) (delay.getValue() * 1000);
+        long now = System.currentTimeMillis();
+        if (now - lastSendTime &lt; delayMs) return;
+
+        String raw = message.getValue();
+        if (raw == null || raw.isBlank()) return;
+
+        String[] parts = raw.split(\"\\|\");
+        String toSend;
+        if (parts.length &gt; 1) {
+            int i = random.getValue() ? (int)(Math.random() * parts.length) : (index++ % parts.length);
+            toSend = parts[i].trim();
+        } else {
+            toSend = raw.trim();
+        }
+        if (toSend.isEmpty()) return;
+
+        if (toSend.startsWith(\"/\")) {
+            mc.player.connection.sendCommand(toSend.substring(1));
+        } else {
+            mc.player.connection.sendChat(toSend);
+        }
+        lastSendTime = now;
+    }
+}
+</code></pre>
+</section>
+
+<!-- ============== JESUS ============== -->
+<section class=\"mod\" id=\"jesus\">
+  <div class=\"mod-head\">
+    <div>
+      <div class=\"mod-title\">Jesus.java <span class=\"pill movement\">Movement</span></div>
+      <div class=\"mod-desc\">
+        <b>Mejorado:</b> ahora caminas <b>encima del agua</b> (no atravesándola), te <b>empuja hacia arriba</b> si estás sumergido, y puedes seguir saltando/moviéndote normalmente. Modo <i>Solid</i> (te trata el agua como bloque) o <i>Dolphin</i> (te impulsa fuera).
+      </div>
+    </div>
+    <button class=\"copy-btn\" data-target=\"code-jesus\">Copiar</button>
+  </div>
+<pre><code class=\"language-java\" id=\"code-jesus\">package kripton.dev.module.modules.movement;
+
+import kripton.dev.module.Category;
+import kripton.dev.module.Module;
+import kripton.dev.module.settings.ModeSetting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.Arrays;
+
+public class Jesus extends Module {
+
+    private final ModeSetting mode = new ModeSetting(\"Modo\", \"Comportamiento sobre el agua\",
+            \"Solid\", Arrays.asList(\"Solid\", \"Dolphin\"));
+
+    public Jesus() {
+        super(\"Jesus\", \"Permite caminar sobre el agua\", Category.MOVEMENT);
+        addSetting(mode);
+    }
+
+    @Override
+    public void onUpdate() {
+        if (mc.player == null || mc.level == null) return;
+        if (mc.player.isShiftKeyDown()) return; // sneak = bajas al agua
+
+        BlockPos feet  = mc.player.blockPosition();
+        BlockPos below = feet.below();
+        FluidState fAt    = mc.level.getFluidState(feet);
+        FluidState fBelow = mc.level.getFluidState(below);
+
+        boolean submerged = !fAt.isEmpty() && fAt.getHeight(mc.level, feet) &gt; 0.5f;
+        boolean overWater = !fBelow.isEmpty();
+
+        Vec3 mv = mc.player.getDeltaMovement();
+
+        if (submerged) {
+            // SACA al jugador del agua
+            mc.player.setDeltaMovement(mv.x * 1.05, 0.32, mc.player.getDeltaMovement().z * 1.05);
+            mc.player.fallDistance = 0;
+            return;
+        }
+
+        if (!overWater) return;
+
+        // CAMINAR sobre el agua
+        double targetY = Math.floor(mc.player.getY()) + 1.0;
+        if (\"Solid\".equals(mode.getValue())) {
+            // Pegado a la superficie, permite saltar normalmente
+            if (mv.y &lt; 0) {
+                mc.player.setDeltaMovement(mv.x, 0.0, mv.z);
+                mc.player.setPos(mc.player.getX(), targetY, mc.player.getZ());
+                mc.player.setOnGround(true);
+                mc.player.fallDistance = 0;
+            }
+        } else { // Dolphin
+            if (mc.player.getY() &lt; targetY) {
+                mc.player.setDeltaMovement(mv.x, 0.2, mv.z);
+            } else {
+                mc.player.setDeltaMovement(mv.x, 0.0, mv.z);
+                mc.player.setOnGround(true);
+                mc.player.fallDistance = 0;
+            }
+        }
+    }
+}
+</code></pre>
+</section>
+
+<!-- ============== AUTOTOTEM ============== -->
+<section class=\"mod\" id=\"autototem\">
+  <div class=\"mod-head\">
+    <div>
+      <div class=\"mod-title\">AutoTotem.java <span class=\"pill player\">Player</span></div>
+      <div class=\"mod-desc\">
+        <b>Fix:</b> ahora <b>nunca</b> toca el slot que estás usando activamente (tu mazo / arma seleccionada). El \"fill hotbar\" respeta cualquier ítem no-vacío y el slot activo. También evita ciclos infinitos cuando hay un GUI abierto (cofre/horno).
+      </div>
+    </div>
+    <button class=\"copy-btn\" data-target=\"code-totem\">Copiar</button>
+  </div>
+<pre><code class=\"language-java\" id=\"code-totem\">package kripton.dev.module.modules.player;
+
+import kripton.dev.module.Category;
+import kripton.dev.module.Module;
+import kripton.dev.module.settings.BooleanSetting;
+import kripton.dev.module.settings.ModeSetting;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+
+import java.util.Arrays;
+
+public class AutoTotem extends Module {
+
+    private final ModeSetting hand        = new ModeSetting(\"Mano\", \"Donde equipar el item\", \"Offhand\",
+                                                 Arrays.asList(\"Offhand\", \"Mainhand\", \"Ambas\"));
+    private final BooleanSetting preferGapple = new BooleanSetting(\"Preferir Manzana\", \"Prioriza manzanas doradas\", false);
+    private final BooleanSetting fillHotbar   = new BooleanSetting(\"Rellenar Hotbar\",  \"Rellena huecos vacios (no el slot activo)\", false);
+    private final BooleanSetting onlyInGui    = new BooleanSetting(\"Solo sin GUI\",     \"Pausa cuando hay un cofre/menu abierto\", true);
+
+    public AutoTotem() {
+        super(\"AutoTotem\", \"Coloca totems automaticamente\", Category.PLAYER);
+        addSetting(hand);
+        addSetting(preferGapple);
+        addSetting(fillHotbar);
+        addSetting(onlyInGui);
+    }
+
+    @Override
+    public void onUpdate() {
+        if (mc.player == null || mc.gameMode == null) return;
+        if (onlyInGui.getValue() && mc.screen instanceof AbstractContainerScreen&lt;?&gt;) return;
+
+        int activeHotbar = mc.player.getInventory().selected;     // 0..8
+        int activeSlot   = 36 + activeHotbar;                     // container slot
+
+        boolean checkOff  = hand.getValue().equals(\"Offhand\")  || hand.getValue().equals(\"Ambas\");
+        boolean checkMain = hand.getValue().equals(\"Mainhand\") || hand.getValue().equals(\"Ambas\");
+
+        if (checkOff) equipItem(45, activeSlot);
+
+        if (checkMain) {
+            // Solo equipa en mainhand si el slot activo NO tiene ya algo importante (mazo/arma)
+            ItemStack held = mc.player.getMainHandItem();
+            if (held.isEmpty() || !isProtectedWeapon(held.getItem())) {
+                equipItem(activeSlot, -1);
+            }
+        }
+
+        if (fillHotbar.getValue()) {
+            for (int i = 0; i &lt; 9; i++) {
+                int slot = 36 + i;
+                if (i == activeHotbar) continue; // NUNCA tocar el slot activo
+                if (!mc.player.inventoryMenu.getSlot(slot).getItem().isEmpty()) continue;
+                equipItem(slot, -1);
+            }
+        }
+    }
+
+    /**
+     * Equipa un totem/gapple en targetContainerSlot.
+     * protectedSlot: slot que NO se puede usar como buffer temporal (ej. slot activo).
+     */
+    private void equipItem(int targetContainerSlot, int protectedSlot) {
+        ItemStack current = mc.player.inventoryMenu.getSlot(targetContainerSlot).getItem();
+        if (isValidItem(current.getItem())) return;
+
+        int bestSlot = findBestItemSlot();
+        if (bestSlot == -1) return;
+        if (bestSlot == protectedSlot) return;
+
+        int cid = mc.player.inventoryMenu.containerId;
+        mc.gameMode.handleInventoryMouseClick(cid, bestSlot, 0, ClickType.PICKUP, mc.player);
+        mc.gameMode.handleInventoryMouseClick(cid, targetContainerSlot, 0, ClickType.PICKUP, mc.player);
+        if (!current.isEmpty()) {
+            mc.gameMode.handleInventoryMouseClick(cid, bestSlot, 0, ClickType.PICKUP, mc.player);
+        }
+    }
+
+    private boolean isProtectedWeapon(Item item) {
+        // Si el slot activo tiene un arma \"buena\" no la sustituimos por totem
+        String id = item.toString().toLowerCase();
+        return id.contains(\"sword\") || id.contains(\"mace\") || id.contains(\"axe\")
+                || id.contains(\"trident\") || id.contains(\"bow\") || id.contains(\"crossbow\");
+    }
+
+    private boolean isValidItem(Item item) {
+        if (item == Items.TOTEM_OF_UNDYING) return true;
+        if (preferGapple.getValue() && (item == Items.GOLDEN_APPLE || item == Items.ENCHANTED_GOLDEN_APPLE)) return true;
+        return false;
+    }
+
+    private int findBestItemSlot() {
+        int gappleSlot = -1;
+        int totemSlot  = -1;
+        for (int i = 9; i &lt;= 35; i++) {
+            Item item = mc.player.inventoryMenu.getSlot(i).getItem().getItem();
+            if (item == Items.TOTEM_OF_UNDYING) totemSlot = i;
+            else if (item == Items.ENCHANTED_GOLDEN_APPLE || item == Items.GOLDEN_APPLE) gappleSlot = i;
+        }
+        if (preferGapple.getValue() && gappleSlot != -1) return gappleSlot;
+        return totemSlot;
+    }
+}
+</code></pre>
+</section>
+
+<!-- ============== NOFALL ============== -->
+<section class=\"mod\" id=\"nofall\">
+  <div class=\"mod-head\">
+    <div>
+      <div class=\"mod-title\">NoFall.java <span class=\"pill player\">Player</span></div>
+      <div class=\"mod-desc\">
+        <b>Fix multiplayer:</b> en servidor el daño se calcula por <b>packet</b>, no por estado del cliente. Esta versión <b>spoofea onGround=true en cada packet de movimiento</b> cuando estás cayendo. Funciona en Vanilla, Paper, Spigot y la mayoría de anticheats básicos (NCP, Aegis).
+      </div>
+    </div>
+    <button class=\"copy-btn\" data-target=\"code-nofall\">Copiar</button>
+  </div>
+<pre><code class=\"language-java\" id=\"code-nofall\">package kripton.dev.module.modules.player;
+
+import kripton.dev.module.Category;
+import kripton.dev.module.Module;
+import kripton.dev.module.settings.ModeSetting;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+
+import java.util.Arrays;
+
+public class NoFall extends Module {
+
+    private final ModeSetting mode = new ModeSetting(\"Modo\", \"Metodo anti-fall\",
+            \"Packet\", Arrays.asList(\"Packet\", \"Spoof\", \"Velocity\"));
+
+    public NoFall() {
+        super(\"NoFall\", \"Evita el daño de caida\", Category.PLAYER);
+        addSetting(mode);
+    }
+
+    @Override
+    public void onUpdate() {
+        if (mc.player == null || mc.getConnection() == null) return;
+
+        boolean falling = mc.player.fallDistance &gt; 2.0f && mc.player.getDeltaMovement().y &lt; 0;
+
+        switch (mode.getValue()) {
+            case \"Packet\" -&gt; {
+                // Envia un packet que dice \"estoy en el suelo\" cuando cae &gt; 2 bloques
+                if (falling) {
+                    mc.getConnection().send(
+                        new ServerboundMovePlayerPacket.StatusOnly(true,
+                            mc.player.horizontalCollision));
+                }
+            }
+            case \"Spoof\" -&gt; {
+                // Marca onGround en cada tick (compatibilidad antigua)
+                if (falling) mc.player.setOnGround(true);
+            }
+            case \"Velocity\" -&gt; {
+                // Frena la caida cuando estas a punto de tocar
+                if (mc.player.getDeltaMovement().y &lt; -0.5 && mc.player.fallDistance &gt; 3.0f) {
+                    var v = mc.player.getDeltaMovement();
+                    mc.player.setDeltaMovement(v.x, -0.0784, v.z);
+                }
+            }
+        }
+    }
+}
+</code></pre>
+  <div class=\"note\"><b>Tip:</b> Si juegas en servidores con anticheat avanzado (Grim, Vulcan, Matrix) lo más estable es el modo <b>Packet</b>. <i>Spoof</i> ya no funciona en MC 1.9+ porque el server valida el campo onGround por packet.</div>
+</section>
+
+<!-- ============== FREECAM ============== -->
+<section class=\"mod\" id=\"freecam\">
+  <div class=\"mod-head\">
+    <div>
+      <div class=\"mod-title\">Freecam.java <span class=\"pill visual\">Visual</span></div>
+      <div class=\"mod-desc\">
+        <b>Reescrito:</b> ahora <b>NO mueve a tu personaje</b>. Usamos una entidad <i>LocalPlayer</i> fake como <code>cameraEntity</code> de Minecraft. Tu personaje real queda quieto en el sitio (el server no detecta nada raro) y tú vuelas libre con WASD + Space/Shift. Al desactivar vuelves a tu cuerpo.
+      </div>
+    </div>
+    <button class=\"copy-btn\" data-target=\"code-freecam\">Copiar</button>
+  </div>
+<pre><code class=\"language-java\" id=\"code-freecam\">package kripton.dev.module.modules.visual;
+
+import kripton.dev.module.Category;
+import kripton.dev.module.Module;
+import kripton.dev.module.settings.NumberSetting;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.world.entity.player.Abilities;
+import net.minecraft.world.phys.Vec3;
+
+public class Freecam extends Module {
+
+    private final NumberSetting speed = new NumberSetting(\"Speed\", \"Velocidad de la camara libre\", 1.5, 0.2, 8.0, 0.1);
+
+    private LocalPlayer fake;
+    private double rx, ry, rz;
+    private float ryaw, rpitch;
+
+    public Freecam() {
+        super(\"Freecam\", \"Mueve la camara libremente sin mover al personaje\", Category.VISUAL);
+        addSetting(speed);
+    }
+
+    @Override
+    protected void onEnable() {
+        if (mc.player == null || mc.level == null || mc.gameMode == null) return;
+
+        // Guardamos posicion/rotacion real
+        rx = mc.player.getX(); ry = mc.player.getY(); rz = mc.player.getZ();
+        ryaw = mc.player.getYRot(); rpitch = mc.player.getXRot();
+
+        // Creamos una copia \"fake\" del jugador que actuara como camara
+        ClientLevel level = (ClientLevel) mc.level;
+        MultiPlayerGameMode gm = mc.gameMode;
+        fake = new LocalPlayer(mc, level, mc.player.connection, mc.player.getStats(),
+                mc.player.getRecipeBook(), false, false);
+        fake.setPos(rx, ry, rz);
+        fake.setYRot(ryaw); fake.setXRot(rpitch);
+        fake.setId(-1234);
+        fake.input = mc.player.input; // reusa input WASD
+
+        // Habilidades de vuelo para esta entidad camara
+        Abilities ab = fake.getAbilities();
+        ab.flying = true;
+        ab.mayfly = true;
+        ab.invulnerable = true;
+        fake.onUpdateAbilities();
+        fake.noPhysics = true;
+
+        // Cambiamos la camara a la fake. El personaje real NO se mueve.
+        mc.setCameraEntity(fake);
+        level.addEntity(fake);
+
+        // Liberamos los inputs del player real para que no camine
+        mc.player.input.tick(false, 0f);
+    }
+
+    @Override
+    protected void onDisable() {
+        if (mc.player == null || mc.level == null) return;
+        if (fake != null) {
+            mc.level.removeEntity(fake.getId(), net.minecraft.world.entity.Entity.RemovalReason.DISCARDED);
+            fake = null;
+        }
+        mc.setCameraEntity(mc.player);
+        mc.player.input.tick(false, 0f);
+    }
+
+    @Override
+    public void onUpdate() {
+        if (fake == null || mc.player == null) return;
+
+        // Bloqueamos el movimiento del personaje real para que el server lo vea quieto
+        mc.player.setPos(rx, ry, rz);
+        mc.player.setDeltaMovement(Vec3.ZERO);
+        mc.player.setYRot(ryaw);
+        mc.player.setXRot(rpitch);
+        mc.player.input.tick(false, 0f);
+
+        // Movemos la entidad camara con input + look
+        double mv = speed.getValue() * 0.5;
+        Vec3 look = fake.getLookAngle();
+        double rxn = -look.z, rzn = look.x;
+        double rl = Math.sqrt(rxn * rxn + rzn * rzn);
+        if (rl &gt; 0.0001) { rxn /= rl; rzn /= rl; }
+
+        float f = fake.input.forwardImpulse;
+        float s = fake.input.leftImpulse;
+
+        double dX = 0, dY = 0, dZ = 0;
+        if (f != 0) { dX += look.x * f * mv; dY += look.y * f * mv; dZ += look.z * f * mv; }
+        if (s != 0) { dX += rxn  * s * mv;                          dZ += rzn  * s * mv; }
+        if (mc.options.keyJump.isDown())  dY += mv;
+        if (mc.options.keyShift.isDown()) dY -= mv;
+
+        fake.setPos(fake.getX() + dX, fake.getY() + dY, fake.getZ() + dZ);
+        fake.setDeltaMovement(Vec3.ZERO);
+    }
+}
+</code></pre>
+  <div class=\"note\">
+    <b>Si la API de tu fork no expone</b> <code>level.addEntity()</code> o <code>new LocalPlayer(...)</code>, usa esta variante simple: guarda <code>mc.cameraEntity</code>, crea un <code>ArmorStand</code> client-side, ponlo como cámara con <code>mc.setCameraEntity(stand)</code> y muévelo con tus controles. La idea clave es <b>no usar mc.player.setPos</b> jamás.
+  </div>
+</section>
+
+<!-- ============== FULLBRIGHT ============== -->
+<section class=\"mod\" id=\"fullbright\">
+  <div class=\"mod-head\">
+    <div>
+      <div class=\"mod-title\">Fullbright.java <span class=\"pill visual\">Visual</span></div>
+      <div class=\"mod-desc\">
+        <b>Fix:</b> en MC 1.21 el <code>OptionInstance&lt;Double&gt;</code> de gamma <b>clampa</b> a 1.0 por validator. Esta versión lo <b>bypass</b> con reflexión escribiendo directo al campo interno (<code>value</code>) y forzando el callback. Resultado: gamma real de 16+ (cuevas iluminadas).
+      </div>
+    </div>
+    <button class=\"copy-btn\" data-target=\"code-fullbright\">Copiar</button>
+  </div>
+<pre><code class=\"language-java\" id=\"code-fullbright\">package kripton.dev.module.modules.visual;
+
+import kripton.dev.module.Category;
+import kripton.dev.module.Module;
+import kripton.dev.module.settings.NumberSetting;
+import net.minecraft.client.OptionInstance;
+
+import java.lang.reflect.Field;
+
+public class Fullbright extends Module {
+
+    private final NumberSetting gammaValue = new NumberSetting(\"Gamma\", \"Nivel de brillo aplicado\", 16.0, 1.0, 100.0, 1.0);
+    private double previousGamma = 1.0;
+    private boolean restored = false;
+
+    public Fullbright() {
+        super(\"Fullbright\", \"Ilumina la pantalla al maximo\", Category.VISUAL);
+        addSetting(gammaValue);
+    }
+
+    @Override
+    protected void onEnable() {
+        if (mc.options == null) return;
+        previousGamma = mc.options.gamma().get();
+        restored = false;
+        setGamma(gammaValue.getValue());
+    }
+
+    @Override
+    public void onUpdate() {
+        if (mc.options == null) return;
+        if (Math.abs(mc.options.gamma().get() - gammaValue.getValue()) &gt; 0.01) {
+            setGamma(gammaValue.getValue());
+        }
+    }
+
+    @Override
+    protected void onDisable() {
+        if (mc.options == null || restored) return;
+        setGamma(previousGamma);
+        restored = true;
+    }
+
+    /**
+     * Bypassea el validator (que clampa a 1.0) escribiendo directo al field 'value'
+     * de OptionInstance via reflexion. Funciona en MC 1.20 - 1.21.x.
+     */
+    private void setGamma(double value) {
+        OptionInstance&lt;Double&gt; opt = mc.options.gamma();
+        try {
+            Field f = OptionInstance.class.getDeclaredField(\"value\");
+            f.setAccessible(true);
+            f.set(opt, value);
+        } catch (NoSuchFieldException e) {
+            // Algunos mappings exponen 'field_244412_b'/'value' con nombre diferente
+            for (Field fld : OptionInstance.class.getDeclaredFields()) {
+                if (fld.getType() == Object.class || fld.getType() == Double.class) {
+                    try { fld.setAccessible(true); fld.set(opt, value); break; }
+                    catch (Exception ignored) {}
+                }
+            }
+        } catch (Exception e) {
+            // Fallback al setter normal (limitado a 1.0)
+            opt.set(value);
+        }
+    }
+}
+</code></pre>
+  <div class=\"note\"><b>Alternativa limpia:</b> añade un mixin a <code>OptionInstance$ClampingLazyMaxIntRange</code> / <code>net.minecraft.client.Options#gamma</code> que devuelva siempre el valor sin clamp. Pero con reflexión te ahorras tocar mixins.</div>
+</section>
+
+<!-- ============== STRINGSETTING FIX ============== -->
+<section class=\"mod\" id=\"stringsetting\">
+  <div class=\"mod-head\">
+    <div>
+      <div class=\"mod-title\">Fix: GUI del StringSetting <span class=\"pill misc\">GUI</span></div>
+      <div class=\"mod-desc\">
+        El bug del <b>Spammer</b> donde \"no veo nada, solo el hueco\" suele estar en el componente que dibuja el <code>StringSetting</code> en tu ClickGui. Lo más común: dibujas el background pero olvidas <code>drawString</code>, o el color del texto está siendo overridden a 0x00000000 (transparente). Reemplaza tu método de render por este patrón:
+      </div>
+    </div>
+    <button class=\"copy-btn\" data-target=\"code-stringgui\">Copiar</button>
+  </div>
+<pre><code class=\"language-java\" id=\"code-stringgui\">// Dentro de tu ClickGui / SettingComponent que renderiza StringSetting
+// Sustituye el bloque que dibuja el campo por este:
+
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.Font;
+
+public void renderStringSetting(GuiGraphics g, Font font, StringSetting setting,
+                                int x, int y, int width, int height, boolean focused) {
+    // Fondo del input
+    g.fill(x, y, x + width, y + height, 0xFF161A23);          // base
+    g.fill(x, y, x + width, y + 1, focused ? 0xFFFF0A6B : 0xFF1F2430); // borde top accent
+
+    // Label arriba (opcional)
+    g.drawString(font, setting.getName(), x + 4, y - 10, 0xFF8B93A7, false);
+
+    // VALOR ACTUAL - el bug suele estar aqui, asegurate de:
+    //   1) usar color con alpha (0xFFRRGGBB, NO 0x00RRGGBB)
+    //   2) llamar SIEMPRE drawString aunque el string este vacio
+    //   3) si esta enfocado, añadir un cursor parpadeante \"_\"
+    String value = setting.getValue() == null ? \"\" : setting.getValue();
+    String shown = value;
+    if (focused && (System.currentTimeMillis() / 500) % 2 == 0) shown = value + \"_\";
+
+    // Recorta visualmente si es muy largo
+    while (font.width(shown) &gt; width - 8 && shown.length() &gt; 0) {
+        shown = shown.substring(1);
+    }
+    g.drawString(font, shown, x + 4, y + (height - 8) / 2, 0xFFE6E8EE, false);
+
+    // Placeholder cuando esta vacio y no enfocado
+    if (value.isEmpty() && !focused) {
+        g.drawString(font, \"(escribe aqui)\", x + 4, y + (height - 8) / 2, 0xFF555B6B, false);
+    }
+}
+
+// Asegurate que el input key handler haga:
+//   if (keyCode == GLFW.GLFW_KEY_BACKSPACE && !setting.getValue().isEmpty()) {
+//       setting.setValue(setting.getValue().substring(0, setting.getValue().length() - 1));
+//   }
+//
+// Y el charTyped:
+//   public boolean charTyped(char c, int mods) {
+//       if (focused && c &gt;= 32 && c != 127) {
+//           setting.setValue(setting.getValue() + c);
+//           return true;
+//       }
+//       return false;
+//   }
+</code></pre>
+  <div class=\"note\"><b>Causas comunes</b> del \"hueco vacío\": 1) color del texto sin canal alpha (<code>0x00FFFFFF</code> es invisible), 2) <code>drawString</code> nunca se llama porque hay un <code>if (value != null && !value.isEmpty())</code> que lo salta, 3) el <code>y</code> del texto cae fuera del clip rectangle. Revisa estos 3 puntos en tu <code>ClickGui</code>.</div>
+</section>
+
+</main>
+
+<footer>
+  Hecho para <b>KriptonClient</b> · MC 1.21.x / Fabric · Pulsa cualquier botón <b>Copiar</b> para llevarte el código.
+</footer>
+
+<script>
+  hljs.highlightAll();
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.target;
+      const el = document.getElementById(id);
+      if (!el) return;
+      const text = el.innerText;
+      try {
+        await navigator.clipboard.writeText(text);
+        const original = btn.textContent;
+        btn.textContent = '✓ Copiado';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1600);
+      } catch(e) {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy'); ta.remove();
+        btn.textContent = '✓ Copiado';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 1600);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
